@@ -18,14 +18,39 @@ promptLine prompt = do
 digits :: Int -> [Int]
 digits = map (read . return) . show
 
+--translate :: [Int] -> [Int]
+--translate [] = []
+--translate (x:xs) = if x == 1
+--   then x: (translate xs)
+--    else
+--        if x == 0
+--            then x: (translate xs)
+--            else 0:(translate xs) --currently turns any number ne 0/1 to 0
+
+verifyB :: [Int] -> [Int]
+verifyB [] = []
+verifyB (x:xs)
+    | x==0 || x==1 = x: (verifyB xs)
+--    | x==1 = x: (verifyB xs)
+    | otherwise = (verifyB xs)
+
+verifyO :: [Int] -> [Int]
+verifyO [] = []
+verifyO (x:xs)
+    | x>=0 && x<8 = x: (verifyO xs)
+    | otherwise = 0: (verifyO xs)
+
 binary :: IO ()
 binary = do
     let binaryList = [2^n | n <- [0..10]]
     line <- promptLine "Enter binary number"
     let number = (read line :: Int)
-    --let c = reverse (digits number)
-    let d = sum (zipWith (*) (reverse . digits $ number) binaryList) --digits applied to number, reverse to that, zipwith with binary list then sum it
-    print (d)
+    --let c = translate (digits $ number)
+    --print (c)
+    --print (sum (zipWith (*) (reverse . digits $ number) binaryList)) --digits applied to number, reverse to that, zipwith with binary list then sum it
+    --let d = sum (zipWith (*) (reverse . verify $ digits $ number) binaryList)
+    print (sum (zipWith(*) (reverse (verifyB (digits (number)))) binaryList))
+    --print (d)
     main
     
 octal :: IO ()
@@ -34,7 +59,7 @@ octal = do
     line <- promptLine "Enter octal number"
     let number = (read line :: Int)
     --let c =  reverse (digits number)
-    print (sum (zipWith (*) (reverse . digits $ number) octalList)) 
+    print (sum (zipWith (*) (reverse . verifyO $ digits $ number) octalList)) 
     --print (d)
     main
     
