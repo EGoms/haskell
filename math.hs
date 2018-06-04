@@ -24,8 +24,9 @@ collatz n
     | even n = n:collatz (n `div` 2)
     | odd n = n:collatz (n*3 + 1)
 
---numIter :: (Integral a) => a -> (a, [a], Int)
+--numIter :: (Integral a) => a -> (a, [a], a)
 --numIter n = (n, (collatz n), length (collatz n))
+
 numIter :: Int -> (String, [Int])
 numIter n = ("Number " ++ show n ++ " takes " ++ show (length (collatz n)) ++ " iterations", collatz n) 
 
@@ -42,5 +43,5 @@ egcd :: Integer -> Integer -> (Integer, Integer)
 egcd a 0 = (1, 0)
 egcd a b = (t, s-q*t)
     where 
-        (q, r) = quotRem a b
+        (q, r) = a `quotRem` b
         (s, t) = egcd b r
