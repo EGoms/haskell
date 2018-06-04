@@ -33,3 +33,14 @@ primeSieve z = sieve [2..z]
     where
         sieve (x:xs) = x : sieve (xs \\ [x,x+x..z])
         sieve [] = []
+
+ugcd :: (Integral a) => a -> a -> a
+ugcd a 0 = a
+ugcd a b = ugcd b (a `mod` b)
+
+egcd :: Integer -> Integer -> (Integer, Integer)
+egcd a 0 = (1, 0)
+egcd a b = (t, s-q*t)
+    where 
+        (q, r) = quotRem a b
+        (s, t) = egcd b r
