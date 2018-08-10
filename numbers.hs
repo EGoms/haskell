@@ -3,32 +3,44 @@ import Data.Char (intToDigit, digitToInt)
 main = do
     line <- promptLine "Enter radix"
     let radix = (read line :: Int)
-    let radixList = [radix^n | n <- [0..10]]
-    if radix == 10
-        then do
-            line <- promptLine "Enter a number"
-            let number = (read line :: Int)
-            line <- promptLine "Enter new base"
-            let base = (read line :: Int)
-            print $ decToAny number base
-            main
-        else do
-            if radix == 16
-                then do
-                    line <- promptLine "Enter a hexadecimal number in quotes"
-                    let number = (read line :: [Char])
-                    print $ hexToDec number
-                    main
-                else do
-                    if radix < 10
-                        then do
-                            line <- promptLine "Enter a number in base <10"
-                            let number = (read line :: Int)
-                            print (sum (zipWith (*) (reverse (verify (digits (number)) radix)) radixList))
-                            main
-                        else do
-                            putStrLn "unhandled radix"
-                            return ()
+    radixHandler radix
+
+radixHandler :: Int -> IO String
+radixHandler number
+    | number < 10 = sub10 "Enter a number in base <10" number
+    | number == 16 = radix16 "Enter a hexadecimal number in quotes"
+    | number == 10 = radix10 "Enter a number"
+    | otherwise = unhandled
+
+unhandled :: IO String
+unhandled = do
+    putStrLn "Unhandled radix"
+    main
+    
+radix10 :: String -> IO String
+radix10 str = do
+    line <- promptLine str
+    let number = (read line :: Int)
+    line <- promptLine "Enter a new base"
+    let base = (read line :: Int)
+    print $ decToAny number base
+    main
+
+radix16 :: String -> IO String
+radix16 str = do
+    line <- promptLine str
+    let number = (read line :: [Char])
+    print $ hexToDec number
+    main
+
+sub10 :: String -> Int -> IO String
+sub10 str num = do
+    line <- promptLine str
+    let number = (read line :: Int)
+    let radixList = [num^n | n <- [0..10]]
+    print (sum (zipWith (*) (reverse (verify (digits (number)) num)) radixList))
+    main
+    
 
 promptLine :: String -> IO String
 promptLine prompt = do
@@ -40,12 +52,13 @@ toNum :: [Char] -> Int -> (Char -> Int) -> Int
 toNum [] base map = 0
 toNum s base map = base * toNum (init (s)) base map + map(last(s))
 
---from decimal, takes number in decimal, base to conver too, and mapping function
+--from decimal, takes number in decimal, base to convert to, and mapping function
 toBase :: Int -> Int -> (Int -> Char) -> [Char]
 toBase x base map
      | x < base = [map x]
      | otherwise = toBase (x `div` base) base map ++ [map (x `mod` base)]
 
+--function to convert hexadecimal to decimal
 mapHexDec :: Char -> Int
 mapHexDec x
     | x == 'A' = 10
@@ -56,6 +69,7 @@ mapHexDec x
     | x == 'F' = 15
     | otherwise = digitToInt(x) :: Int
 
+--function to convert decimal to hexadecimal
 mapDecHex :: Int -> Char
 mapDecHex x
     | x < 10 = intToDigit(x)
@@ -84,5 +98,3 @@ digits = map (read . return) . show
 
 decToAny :: Int -> Int -> String
 decToAny x n = toBase x n (\x -> intToDigit(x))
-
-

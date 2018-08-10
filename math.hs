@@ -8,6 +8,7 @@ rights = [(a,b,c) | c <- [1..100], b <- [1..c], a <- [1..b], a^2 + b^2 == c^2]
 
 test x = "This number is " ++ show x
 
+length' :: (Num p) => [a] -> p
 length' [] = 0
 length' (_:xs) = 1 + length' xs
 
@@ -30,6 +31,7 @@ collatz n
 numIter :: Int -> (String, [Int])
 numIter n = ("Number " ++ show n ++ " takes " ++ show (length (collatz n)) ++ " iterations", collatz n) 
 
+primeSieve :: (Eq p, Num p, Enum p) => p -> [p]
 primeSieve z = sieve [2..z]
     where
         sieve (x:xs) = x : sieve (xs \\ [x,x+x..z])
