@@ -47,3 +47,5 @@ egcd a b = (t, s-q*t)
     where 
         (q, r) = a `quotRem` b
         (s, t) = egcd b r
+        
+fibs = 0 : 1 : zipWith (+) fibs (tail fibs)        
