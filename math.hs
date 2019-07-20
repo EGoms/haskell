@@ -70,6 +70,8 @@ run =
           | x <- [-2,-1.9685 .. 0.5] ]
         | y <- [1, 0.95 .. -1] ]
 
+longest xs ys = if length xs > length ys then xs else ys
+
 lcs xs ys = a!(0,0) where
   n = length xs
   m = length ys
