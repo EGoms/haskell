@@ -49,7 +49,12 @@ egcd a b = (t, s-q*t)
     where 
         (q, r) = a `quotRem` b
         (s, t) = egcd b r
-        
+
+lcm :: (Integral a) => a -> a -> a
+lcm _ 0 = 0
+lcm 0 _ = 0
+lcm x y = abs ((x `quot` (gcd x y )) * y)
+
 fibs = 0 : 1 : zipWith (+) fibs (tail fibs)        
 
 
