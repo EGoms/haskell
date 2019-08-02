@@ -2,7 +2,7 @@ import Data.Bool
 import Data.Complex (Complex((:+)), magnitude)
 import Data.Array
 import Data.Ord (comparing)
-import Data.List (maximumBy, intersect)
+import Data.List
 
 pythag :: (Floating a) => a -> a -> a
 pythag x y = sqrt (x**2 + y**2)
